@@ -7,7 +7,7 @@ This task is about implementing of web-based database browser (similar to deskto
 The result should be RESTful service with its own database.
 This task should be implemented in Java. Database for persistence of data is your choice.
 
-### Additional information
+### Solution additional information
 If you want to test this application on your machine, please build the jar file (`mvn clean install`), then run `docker-compose up --build` in the root location.
 
 Docker will run three containers: 
@@ -17,7 +17,7 @@ Docker will run three containers:
 
 Under assumption that you've launched containers, documentation can be accessed on *http://localhost:8080/swagger-ui.html.*
 
-To connect to test database, please use following parameters:
+If you want to connect to database with generated test table `employees`, please use following parameters:
  > {
  > 
  >   "databaseName": "testdb",
