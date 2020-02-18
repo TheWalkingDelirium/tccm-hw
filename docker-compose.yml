@@ -5,9 +5,25 @@ services:
     image: postgres:latest
     ports: 
       - "5432:5432"
+    environment:
+        POSTGRES_HOST_AUTH_METHOD: trust  
     volumes:
       - my_hw_dbdata:/var/lib/postgresql/data
     restart: always
+  db_test:
+    container_name: db_test
+    build: 
+      context: ./testdata
+      dockerfile: Dockerfile
+    ports: 
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: usertest
+      POSTGRES_PASSWORD: passwordtest
+      POSTGRES_DB: testdb
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - testdata:/docker-entrypoint-initdb.d/
   hw:
     container_name: hw
     build: 
@@ -16,5 +32,7 @@ services:
     image: hw:testimage
     ports:
       - 8080:8080
+      - 5005:5005
 volumes:
+  testdata:
   my_hw_dbdata:

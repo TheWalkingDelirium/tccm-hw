@@ -111,20 +111,57 @@ public class DbService {
                 }).orElseThrow(() -> new Exception("failed to get connection"));
     }
 
+    // result is parsed according to the documentation https://docs.oracle.com/en/java/javase/13/docs/api/java.sql/java/sql/DatabaseMetaData.html#getColumns
+    //TABLE_CAT String => table catalog (may be null)
+    //TABLE_SCHEM String => table schema (may be null)
+    //TABLE_NAME String => table name
+    //COLUMN_NAME String => column name
+    //DATA_TYPE int => SQL type from java.sql.Types
+    //TYPE_NAME String => Data source dependent type name, for a UDT the type name is fully qualified
+    //COLUMN_SIZE int => column size.
+    //BUFFER_LENGTH is not used.
+    //DECIMAL_DIGITS int => the number of fractional digits. Null is returned for data types where DECIMAL_DIGITS is not applicable.
+    //NUM_PREC_RADIX int => Radix (typically either 10 or 2)
+    //NULLABLE int => is NULL allowed.
+    //REMARKS String => comment describing column (may be null)
+    //COLUMN_DEF String => default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be null)
+    //SQL_DATA_TYPE int => unused
+    //SQL_DATETIME_SUB int => unused
+    //CHAR_OCTET_LENGTH int => for char types the maximum number of bytes in the column
+    //ORDINAL_POSITION int => index of column in table (starting at 1)
+    //IS_NULLABLE String => ISO rules are used to determine the nullability for a column.
+    //SCOPE_CATALOG String => catalog of table that is the scope of a reference attribute (null if DATA_TYPE isn't REF)
+    //SCOPE_SCHEMA String => schema of table that is the scope of a reference attribute (null if the DATA_TYPE isn't REF)
+    //SCOPE_TABLE String => table name that this the scope of a reference attribute (null if the DATA_TYPE isn't REF)
+    //SOURCE_DATA_TYPE short => source type of a distinct type or user-generated Ref type, SQL type from java.sql.Types (null if DATA_TYPE isn't DISTINCT or user-generated REF)
+    //IS_AUTOINCREMENT String => Indicates whether this column is auto incremented
+    //IS_GENERATEDCOLUMN String => Indicates whether this is a generated column
     private Column toColumn(final ResultSet columnResultSet) throws SQLException {
         return new Column(
-                columnResultSet.getString(1), // column index
-                columnResultSet.getString(2),
-                columnResultSet.getString(3),
-                columnResultSet.getString(4),
-                columnResultSet.getString(5),
-                columnResultSet.getString(6),
-                columnResultSet.getString(7),
-                columnResultSet.getString(8),
-                columnResultSet.getString(9),
-                columnResultSet.getString(10),
-                columnResultSet.getString(11),
-                columnResultSet.getString(12)
+                columnResultSet.getString(Column.TABLE_CAT),
+                columnResultSet.getString(Column.TABLE_SCHEM),
+                columnResultSet.getString(Column.TABLE_NAME),
+                columnResultSet.getString(Column.COLUMN_NAME),
+                columnResultSet.getString(Column.DATA_TYPE),
+                columnResultSet.getString(Column.TYPE_NAME),
+                columnResultSet.getString(Column.COLUMN_SIZE),
+                columnResultSet.getString(Column.BUFFER_LENGTH),
+                columnResultSet.getString(Column.DECIMAL_DIGITS),
+                columnResultSet.getString(Column.NUM_PREC_RADIX),
+                columnResultSet.getString(Column.NULLABLE),
+                columnResultSet.getString(Column.REMARKS),
+                columnResultSet.getString(Column.COLUMN_DEF),
+                columnResultSet.getString(Column.SQL_DATA_TYPE),
+                columnResultSet.getString(Column.SQL_DATETIME_SUB),
+                columnResultSet.getString(Column.CHAR_OCTET_LENGTH),
+                columnResultSet.getString(Column.ORDINAL_POSITION),
+                columnResultSet.getString(Column.IS_NULLABLE),
+                columnResultSet.getString(Column.SCOPE_CATALOG),
+                columnResultSet.getString(Column.SCOPE_SCHEMA),
+                columnResultSet.getString(Column.SCOPE_TABLE),
+                columnResultSet.getString(Column.SOURCE_DATA_TYPE),
+                columnResultSet.getString(Column.IS_AUTOINCREMENT),
+                columnResultSet.getString(Column.IS_GENERATEDCOLUMN)
         );
     }
 
@@ -132,18 +169,30 @@ public class DbService {
         return "SELECT * FROM " + Optional.ofNullable(schema).map(i -> i + ".").orElse("") + table + " LIMIT 10;";
     }
 
+
+    // result is parsed based on the documentation https://docs.oracle.com/en/java/javase/13/docs/api/java.sql/java/sql/DatabaseMetaData.html#getTables
+    // TABLE_CAT => table catalog (may be null)
+    // TABLE_SCHEM => table schema (may be null)
+    // TABLE_NAME => table name
+    // TABLE_TYPE => table type. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
+    // REMARKS => explanatory comment on the table
+    // TYPE_CAT => the types catalog (may be null)
+    // TYPE_SCHEM => the types schema (may be null)
+    // TYPE_NAME => type name (may be null)
+    // SELF_REFERENCING_COL_NAME => name of the designated "identifier" column of a typed table (may be null)
+    // REF_GENERATION > specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null)
     private Table toTable(final ResultSet tableResultSet) throws SQLException {
         return new Table(
-                tableResultSet.getString(1), // column index
-                tableResultSet.getString(2),
-                tableResultSet.getString(3),
-                tableResultSet.getString(4),
-                tableResultSet.getString(5),
-                tableResultSet.getString(6),
-                tableResultSet.getString(7),
-                tableResultSet.getString(8),
-                tableResultSet.getString(9),
-                tableResultSet.getString(10)
+                tableResultSet.getString(Table.TABLE_CAT),
+                tableResultSet.getString(Table.TABLE_SCHEM),
+                tableResultSet.getString(Table.TABLE_NAME),
+                tableResultSet.getString(Table.TABLE_TYPE),
+                tableResultSet.getString(Table.REMARKS),
+                tableResultSet.getString(Table.TYPE_CAT),
+                tableResultSet.getString(Table.TYPE_SCHEM),
+                tableResultSet.getString(Table.TYPE_NAME),
+                tableResultSet.getString(Table.SELF_REFERENCING_COL_NAME),
+                tableResultSet.getString(Table.REF_GENERATION)
         );
     }
 
@@ -177,7 +226,7 @@ public class DbService {
                 median = medianRs.getString(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return new ColumnStat(column.getTableName(), column.getColumnName(), min, max, avg, median);
@@ -199,7 +248,7 @@ public class DbService {
                 numberOfRecords = numberOfRecordsRS.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return new TableStat(numberOfRecords, numberOfAttributes);

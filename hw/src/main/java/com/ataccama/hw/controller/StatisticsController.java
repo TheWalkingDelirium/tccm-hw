@@ -41,7 +41,7 @@ public class StatisticsController {
         final List<Column> columns = dbService.listColumns(connectionId, catalog, schemaName, tableName, columnName);
         final List<Column> filtered = columns
                 .stream()
-                .filter(c -> SUPPORTED_NUMBER_COLUMN_TYPES.contains(c.getColumnDataTypeName()))
+                .filter(c -> SUPPORTED_NUMBER_COLUMN_TYPES.contains(c.getTypeName()))
                 .collect(Collectors.toList());
 
         final List<ColumnStat> result = dbService.getStatsForColumns(connectionId, filtered);
