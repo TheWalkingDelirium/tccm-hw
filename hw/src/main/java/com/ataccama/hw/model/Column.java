@@ -2,52 +2,88 @@ package com.ataccama.hw.model;
 
 
 public class Column {
-    private final String tableCatalog;
-    private final String schemaCatalog;
+    private final String tableCat;
+    private final String tableSchem;
     private final String tableName;
     private final String columnName;
-    private final String columnDataType;
-    private final String columnDataTypeName;
+    private final String dataType;
+    private final String typeName;
     private final String columnSize;
-    private final String columnComments;
-    private final String columnDefaultValue;
-    private final String columnIndex;
+    private final String bufferLength;
+    private final String decimalDigits;
+    private final String numPrecRadix;
+    private final String nullable;
+    private final String remarks;
+    private final String columnDef;
+    private final String sqlDataType;
+    private final String sqlDatetimeSub;
+    private final String charOctetLength;
+    private final String ordinalPosition;
+    private final String isNullable;
+    private final String scopeCatalog;
+    private final String scopeSchema;
+    private final String scopeTable;
+    private final String sourceDataType;
     private final String isAutoincrement;
-    private final String isGenerated;
+    private final String isGeneratedcolumn;
 
-    public Column(final String tableCatalog,
-                  final String schemaCatalog,
-                  final String tableName,
-                  final String columnName,
-                  final String columnDataType,
-                  final String columnDataTypeName,
-                  final String columnSize,
-                  final String columnComments,
-                  final String columnDefaultValue,
-                  final String columnIndex,
-                  final String isAutoincrement,
-                  final String isGenerated)
-    {
-        this.tableCatalog = tableCatalog;
-        this.schemaCatalog = schemaCatalog;
+    public Column(
+            String tableCat,
+            String tableSchem,
+            String tableName,
+            String columnName,
+            String dataType,
+            String typeName,
+            String columnSize,
+            String bufferLength,
+            String decimalDigits,
+            String numPrecRadix,
+            String nullable,
+            String remarks,
+            String columnDef,
+            String sqlDataType,
+            String sqlDatetimeSub,
+            String charOctetLength,
+            String ordinalPosition,
+            String isNullable,
+            String scopeCatalog,
+            String scopeSchema,
+            String scopeTable,
+            String sourceDataType,
+            String isAutoincrement,
+            String isGeneratedcolumn) {
+        this.tableCat = tableCat;
+        this.tableSchem = tableSchem;
         this.tableName = tableName;
         this.columnName = columnName;
-        this.columnDataType = columnDataType;
-        this.columnDataTypeName = columnDataTypeName;
+        this.dataType = dataType;
+        this.typeName = typeName;
         this.columnSize = columnSize;
-        this.columnComments = columnComments;
-        this.columnDefaultValue = columnDefaultValue;
-        this.columnIndex = columnIndex;
+        this.bufferLength = bufferLength;
+        this.decimalDigits = decimalDigits;
+        this.numPrecRadix = numPrecRadix;
+        this.nullable = nullable;
+        this.remarks = remarks;
+        this.columnDef = columnDef;
+        this.sqlDataType = sqlDataType;
+        this.sqlDatetimeSub = sqlDatetimeSub;
+        this.charOctetLength = charOctetLength;
+        this.ordinalPosition = ordinalPosition;
+        this.isNullable = isNullable;
+        this.scopeCatalog = scopeCatalog;
+        this.scopeSchema = scopeSchema;
+        this.scopeTable = scopeTable;
+        this.sourceDataType = sourceDataType;
         this.isAutoincrement = isAutoincrement;
-        this.isGenerated = isGenerated;
+        this.isGeneratedcolumn = isGeneratedcolumn;
     }
 
-    public String getTableCatalog() {
-        return tableCatalog;
+    public String getTableCat() {
+        return tableCat;
     }
 
-    public String getSchemaCatalog() {
-        return schemaCatalog;
+    public String getTableSchem() {
+        return tableSchem;
     }
 
     public String getTableName() {
@@ -58,35 +94,83 @@ public class Column {
         return columnName;
     }
 
-    public String getColumnDataType() {
-        return columnDataType;
+    public String getDataType() {
+        return dataType;
     }
 
-    public String getColumnDataTypeName() {
-        return columnDataTypeName;
+    public String getTypeName() {
+        return typeName;
     }
 
     public String getColumnSize() {
         return columnSize;
     }
 
-    public String getColumnComments() {
-        return columnComments;
+    public String getBufferLength() {
+        return bufferLength;
     }
 
-    public String getColumnDefaultValue() {
-        return columnDefaultValue;
+    public String getDecimalDigits() {
+        return decimalDigits;
     }
 
-    public String getColumnIndex() {
-        return columnIndex;
+    public String getNumPrecRadix() {
+        return numPrecRadix;
+    }
+
+    public String getNullable() {
+        return nullable;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public String getColumnDef() {
+        return columnDef;
+    }
+
+    public String getSqlDataType() {
+        return sqlDataType;
+    }
+
+    public String getSqlDatetimeSub() {
+        return sqlDatetimeSub;
+    }
+
+    public String getCharOctetLength() {
+        return charOctetLength;
+    }
+
+    public String getOrdinalPosition() {
+        return ordinalPosition;
+    }
+
+    public String getIsNullable() {
+        return isNullable;
+    }
+
+    public String getScopeCatalog() {
+        return scopeCatalog;
+    }
+
+    public String getScopeSchema() {
+        return scopeSchema;
+    }
+
+    public String getScopeTable() {
+        return scopeTable;
+    }
+
+    public String getSourceDataType() {
+        return sourceDataType;
     }
 
     public String getIsAutoincrement() {
         return isAutoincrement;
     }
 
-    public String getIsGenerated() {
-        return isGenerated;
+    public String getIsGeneratedcolumn() {
+        return isGeneratedcolumn;
     }
 }
