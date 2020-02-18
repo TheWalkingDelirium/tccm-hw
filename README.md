@@ -2,7 +2,7 @@
 
 > homework for ataccama job application process
 
-### Bried task description:
+### Brief task description:
 This task is about implementing of web-based database browser (similar to desktop application DBeaver) with basic functionality and for single database vendor only. Browser should be able to register multiple database connections and browse their data and structure.
 The result should be RESTful service with its own database.
 This task should be implemented in Java. Database for persistence of data is your choice.
