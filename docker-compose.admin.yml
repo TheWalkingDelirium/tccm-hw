@@ -1,0 +1,9 @@
+version: '3'
+services:
+  dbonly:
+        container_name: db
+        image: postgres:latest
+        ports: 
+          - "5432:5432"
+        volumes:
+          - my_hw_dbdata:/var/lib/postgresql/data

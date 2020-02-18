@@ -1,0 +1,20 @@
+version: "3"
+services:
+  db:
+    container_name: db
+    image: postgres:latest
+    ports: 
+      - "5432:5432"
+    volumes:
+      - my_hw_dbdata:/var/lib/postgresql/data
+    restart: always
+  hw:
+    container_name: hw
+    build: 
+      context: ./hw
+      dockerfile: Dockerfile
+    image: hw:testimage
+    ports:
+      - 8080:8080
+volumes:
+  my_hw_dbdata:
