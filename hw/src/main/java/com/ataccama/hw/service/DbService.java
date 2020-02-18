@@ -140,30 +140,30 @@ public class DbService {
     //IS_GENERATEDCOLUMN String => Indicates whether this is a generated column
     private Column toColumn(final ResultSet r) throws SQLException {
         return new Column(
-                r.getString("TABLE_CAT"),
-                r.getString("TABLE_SCHEM"),
-                r.getString("TABLE_NAME"),
-                r.getString("COLUMN_NAME"),
-                r.getString("DATA_TYPE"),
-                r.getString("TYPE_NAME"),
-                r.getString("COLUMN_SIZE"),
-                r.getString("BUFFER_LENGTH"),
-                r.getString("DECIMAL_DIGITS"),
-                r.getString("NUM_PREC_RADIX"),
-                r.getString("NULLABLE"),
-                r.getString("REMARKS"),
-                r.getString("COLUMN_DEF"),
-                r.getString("SQL_DATA_TYPE"),
-                r.getString("SQL_DATETIME_SUB"),
-                r.getString("CHAR_OCTET_LENGTH"),
-                r.getString("ORDINAL_POSITION"),
-                r.getString("IS_NULLABLE"),
-                r.getString("SCOPE_CATALOG"),
-                r.getString("SCOPE_SCHEMA"),
-                r.getString("SCOPE_TABLE"),
-                r.getString("SOURCE_DATA_TYPE"),
-                r.getString("IS_AUTOINCREMENT"),
-                r.getString("IS_GENERATEDCOLUMN")
+                r.getString(Column.TABLE_CAT),
+                r.getString(Column.TABLE_SCHEM),
+                r.getString(Column.TABLE_NAME),
+                r.getString(Column.COLUMN_NAME),
+                r.getString(Column.DATA_TYPE),
+                r.getString(Column.TYPE_NAME),
+                r.getString(Column.COLUMN_SIZE),
+                r.getString(Column.BUFFER_LENGTH),
+                r.getString(Column.DECIMAL_DIGITS),
+                r.getString(Column.NUM_PREC_RADIX),
+                r.getString(Column.NULLABLE),
+                r.getString(Column.REMARKS),
+                r.getString(Column.COLUMN_DEF),
+                r.getString(Column.SQL_DATA_TYPE),
+                r.getString(Column.SQL_DATETIME_SUB),
+                r.getString(Column.CHAR_OCTET_LENGTH),
+                r.getString(Column.ORDINAL_POSITION),
+                r.getString(Column.IS_NULLABLE),
+                r.getString(Column.SCOPE_CATALOG),
+                r.getString(Column.SCOPE_SCHEMA),
+                r.getString(Column.SCOPE_TABLE),
+                r.getString(Column.SOURCE_DATA_TYPE),
+                r.getString(Column.IS_AUTOINCREMENT),
+                r.getString(Column.IS_GENERATEDCOLUMN)
         );
     }
 
@@ -185,16 +185,16 @@ public class DbService {
     // REF_GENERATION > specifies how values in SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER", "DERIVED". (may be null)
     private Table toTable(final ResultSet r) throws SQLException {
         return new Table(
-                r.getString("TABLE_CAT"),
-                r.getString("TABLE_SCHEM"),
-                r.getString("TABLE_NAME"),
-                r.getString("TABLE_TYPE"),
-                r.getString("REMARKS"),
-                r.getString("TYPE_CAT"),
-                r.getString("TYPE_SCHEM"),
-                r.getString("TYPE_NAME"),
-                r.getString("SELF_REFERENCING_COL_NAME"),
-                r.getString("REF_GENERATION") //
+                r.getString(Table.TABLE_CAT),
+                r.getString(Table.TABLE_SCHEM),
+                r.getString(Table.TABLE_NAME),
+                r.getString(Table.TABLE_TYPE),
+                r.getString(Table.REMARKS),
+                r.getString(Table.TYPE_CAT),
+                r.getString(Table.TYPE_SCHEM),
+                r.getString(Table.TYPE_NAME),
+                r.getString(Table.SELF_REFERENCING_COL_NAME),
+                r.getString(Table.REF_GENERATION) 
         );
     }
 

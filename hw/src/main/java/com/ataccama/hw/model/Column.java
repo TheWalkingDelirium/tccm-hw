@@ -2,6 +2,31 @@ package com.ataccama.hw.model;
 
 
 public class Column {
+    public final static String TABLE_CAT = "TABLE_CAT";
+    public final static String TABLE_SCHEM = "TABLE_SCHEM";
+    public final static String TABLE_NAME = "TABLE_NAME";
+    public final static String COLUMN_NAME = "COLUMN_NAME";
+    public final static String DATA_TYPE = "DATA_TYPE";
+    public final static String TYPE_NAME = "TYPE_NAME";
+    public final static String COLUMN_SIZE = "COLUMN_SIZE";
+    public final static String BUFFER_LENGTH = "BUFFER_LENGTH";
+    public final static String DECIMAL_DIGITS = "DECIMAL_DIGITS";
+    public final static String NUM_PREC_RADIX = "NUM_PREC_RADIX";
+    public final static String NULLABLE = "NULLABLE";
+    public final static String REMARKS = "REMARKS";
+    public final static String COLUMN_DEF = "COLUMN_DEF";
+    public final static String SQL_DATA_TYPE = "SQL_DATA_TYPE";
+    public final static String SQL_DATETIME_SUB = "SQL_DATETIME_SUB";
+    public final static String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";
+    public final static String ORDINAL_POSITION = "ORDINAL_POSITION";
+    public final static String IS_NULLABLE = "IS_NULLABLE";
+    public final static String SCOPE_CATALOG = "SCOPE_CATALOG";
+    public final static String SCOPE_SCHEMA = "SCOPE_SCHEMA";
+    public final static String SCOPE_TABLE = "SCOPE_TABLE";
+    public final static String SOURCE_DATA_TYPE = "SOURCE_DATA_TYPE";
+    public final static String IS_AUTOINCREMENT = "IS_AUTOINCREMENT";
+    public final static String IS_GENERATEDCOLUMN = "IS_GENERATEDCOLUMN";
+
     private final String tableCat;
     private final String tableSchem;
     private final String tableName;

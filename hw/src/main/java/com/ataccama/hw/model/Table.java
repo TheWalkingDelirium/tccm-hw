@@ -3,6 +3,17 @@ package com.ataccama.hw.model;
 import java.util.Objects;
 
 public class Table {
+    public final static String TABLE_CAT = "TABLE_CAT";
+    public final static String TABLE_SCHEM = "TABLE_SCHEM";
+    public final static String TABLE_NAME = "TABLE_NAME";
+    public final static String TABLE_TYPE = "TABLE_TYPE";
+    public final static String REMARKS = "REMARKS";
+    public final static String TYPE_CAT = "TYPE_CAT";
+    public final static String TYPE_SCHEM = "TYPE_SCHEM";
+    public final static String TYPE_NAME = "TYPE_NAME";
+    public final static String SELF_REFERENCING_COL_NAME = "SELF_REFERENCING_COL_NAME";
+    public final static String REF_GENERATION = "REF_GENERATION";
+
     private final String catalog;
     private final String schema;
     private final String name;
