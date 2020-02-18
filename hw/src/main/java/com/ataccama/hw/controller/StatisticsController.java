@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/stat")
 public class StatisticsController {
-    private static final List<String> numberColumnTypes = List.of("int8", "float8", "int", "int4", "decimal", "float4", "int2");
+    private static final List<String> SUPPORTED_NUMBER_COLUMN_TYPES = List.of("int8", "float8", "int", "int4", "decimal", "float4", "int2");
     private final DbService dbService;
 
     @Autowired
@@ -41,7 +41,7 @@ public class StatisticsController {
         final List<Column> columns = dbService.listColumns(connectionId, catalog, schemaName, tableName, columnName);
         final List<Column> filtered = columns
                 .stream()
-                .filter(c -> numberColumnTypes.contains(c.getColumnDataTypeName()))
+                .filter(c -> SUPPORTED_NUMBER_COLUMN_TYPES.contains(c.getColumnDataTypeName()))
                 .collect(Collectors.toList());
 
         final List<ColumnStat> result = dbService.getStatsForColumns(connectionId, filtered);

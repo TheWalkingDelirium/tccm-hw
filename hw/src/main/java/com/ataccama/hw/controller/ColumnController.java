@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value="Column Listing endpoing")
+@Api(value="Column Listing endpoint")
 @RestController
 @RequestMapping("/column")
 public class ColumnController {
@@ -33,7 +33,7 @@ public class ColumnController {
                                                     @RequestParam(required = false) final String tableNamePattern,
                                                     @RequestParam(required = false) final String columnNamePattern) throws Exception {
 
-        return new ResponseEntity<List<Column>>(
+        return new ResponseEntity<>(
                 dbService.listColumns(connectionId, catalog, schemaPattern, tableNamePattern, columnNamePattern),
                 HttpStatus.OK);
     }

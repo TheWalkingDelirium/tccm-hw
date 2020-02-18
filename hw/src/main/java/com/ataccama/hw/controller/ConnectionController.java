@@ -26,7 +26,7 @@ public class ConnectionController {
     @ApiOperation(value = "View a list of stored connections")
     @GetMapping
     public ResponseEntity<List<Connection>> listConnection() {
-        var savedConnections = connectionService.listConnection();
+        final var savedConnections = connectionService.listConnection();
         return new ResponseEntity<>(savedConnections, HttpStatus.OK);
     }
 

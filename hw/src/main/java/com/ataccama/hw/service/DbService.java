@@ -24,12 +24,12 @@ public class DbService {
     }
 
     public List<ColumnStat> getStatsForColumns(final Long connectionId, final List<Column> columns) throws Exception {
-        java.sql.Connection connection = getDbConnection(connectionId);
+        final java.sql.Connection connection = getDbConnection(connectionId);
         return columns.stream().map(column -> getColumnStat(connection, column)).collect(Collectors.toList());
     }
 
     public List<TableStat> getStatsForTable(final Long connectionId, final List<Table> tables) throws Exception {
-        java.sql.Connection connection = getDbConnection(connectionId);
+        final java.sql.Connection connection = getDbConnection(connectionId);
         return tables.stream().map(table -> getTableStat(connection, table)).collect(Collectors.toList());
     }
 
@@ -63,16 +63,16 @@ public class DbService {
     public List<Map<String, Object>> getPreview(final Long connectionId,
                                                 final String schema,
                                                 final String tableName) throws Exception {
-        final ResultSet rs = getDbConnection(connectionId).createStatement().executeQuery(buildStatement(schema, tableName));
+        final ResultSet resultSet = getDbConnection(connectionId).createStatement().executeQuery(buildStatement(schema, tableName));
 
-        final ResultSetMetaData md = rs.getMetaData();
-        final int columns = md.getColumnCount();
+        final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+        final int columns = resultSetMetaData.getColumnCount();
         final ArrayList<Map<String, Object>> list = new ArrayList<>(10);
 
-        while (rs.next()) {
-            HashMap<String, Object> row = new HashMap<>(columns);
+        while (resultSet.next()) {
+            final HashMap<String, Object> row = new HashMap<>(columns);
             for (int i = 1; i <= columns; ++i) {
-                row.put(md.getColumnName(i), rs.getObject(i));
+                row.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
             }
             list.add(row);
         }
@@ -111,20 +111,20 @@ public class DbService {
                 }).orElseThrow(() -> new Exception("failed to get connection"));
     }
 
-    private Column toColumn(final ResultSet r) throws SQLException {
+    private Column toColumn(final ResultSet columnResultSet) throws SQLException {
         return new Column(
-                r.getString(1), // column index
-                r.getString(2),
-                r.getString(3),
-                r.getString(4),
-                r.getString(5),
-                r.getString(6),
-                r.getString(7),
-                r.getString(8),
-                r.getString(9),
-                r.getString(10),
-                r.getString(11),
-                r.getString(12)
+                columnResultSet.getString(1), // column index
+                columnResultSet.getString(2),
+                columnResultSet.getString(3),
+                columnResultSet.getString(4),
+                columnResultSet.getString(5),
+                columnResultSet.getString(6),
+                columnResultSet.getString(7),
+                columnResultSet.getString(8),
+                columnResultSet.getString(9),
+                columnResultSet.getString(10),
+                columnResultSet.getString(11),
+                columnResultSet.getString(12)
         );
     }
 
@@ -132,18 +132,18 @@ public class DbService {
         return "SELECT * FROM " + Optional.ofNullable(schema).map(i -> i + ".").orElse("") + table + " LIMIT 10;";
     }
 
-    private Table toTable(final ResultSet r) throws SQLException {
+    private Table toTable(final ResultSet tableResultSet) throws SQLException {
         return new Table(
-                r.getString(1), // column index
-                r.getString(2),
-                r.getString(3),
-                r.getString(4),
-                r.getString(5),
-                r.getString(6),
-                r.getString(7),
-                r.getString(8),
-                r.getString(9),
-                r.getString(10)
+                tableResultSet.getString(1), // column index
+                tableResultSet.getString(2),
+                tableResultSet.getString(3),
+                tableResultSet.getString(4),
+                tableResultSet.getString(5),
+                tableResultSet.getString(6),
+                tableResultSet.getString(7),
+                tableResultSet.getString(8),
+                tableResultSet.getString(9),
+                tableResultSet.getString(10)
         );
     }
 
@@ -154,25 +154,25 @@ public class DbService {
         String median = "";
 
         try {
-            Statement statement = connection.createStatement();
+            final Statement statement = connection.createStatement();
 
-            ResultSet minRs = statement.executeQuery("SELECT MIN(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
+            final ResultSet minRs = statement.executeQuery("SELECT MIN(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
             while (minRs.next()) {
                 min = minRs.getString(1);
             }
 
-            ResultSet maxRs = statement.executeQuery("SELECT MAX(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
+            final ResultSet maxRs = statement.executeQuery("SELECT MAX(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
             while (maxRs.next()) {
                 max = maxRs.getString(1);
             }
 
-            ResultSet avgRs = statement.executeQuery("SELECT AVG(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
+            final ResultSet avgRs = statement.executeQuery("SELECT AVG(" + column.getColumnName() + ") FROM " + column.getTableName() + ";");
             while (avgRs.next()) {
                 avg = avgRs.getString(1);
             }
 
             // get median value
-            ResultSet medianRs = statement.executeQuery("SELECT percentile_disc(0.5) within group (order by " + column.getColumnName() + ") FROM " + column.getTableName() + ";");
+            final ResultSet medianRs = statement.executeQuery("SELECT percentile_disc(0.5) within group (order by " + column.getColumnName() + ") FROM " + column.getTableName() + ";");
             while (medianRs.next()) {
                 median = medianRs.getString(1);
             }
@@ -188,13 +188,13 @@ public class DbService {
         int numberOfAttributes = 0;
 
         try {
-            Statement statement = connection.createStatement();
-            ResultSet attrCountRS = statement.executeQuery("SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table.getName() + "';");
+            final Statement statement = connection.createStatement();
+            final ResultSet attrCountRS = statement.executeQuery("SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table.getName() + "';");
             while (attrCountRS.next()) {
                 numberOfAttributes = attrCountRS.getInt(1);
             }
 
-            ResultSet numberOfRecordsRS = statement.executeQuery("SELECT COUNT(*) FROM " + table.getName() + ";");
+            final ResultSet numberOfRecordsRS = statement.executeQuery("SELECT COUNT(*) FROM " + table.getName() + ";");
             while (numberOfRecordsRS.next()) {
                 numberOfRecords = numberOfRecordsRS.getInt(1);
             }

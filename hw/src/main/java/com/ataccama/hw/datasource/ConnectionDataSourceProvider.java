@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectionDataSourceProvider {
 
-    private final String dbBaseUrl = "jdbc:postgresql://";
+    private final static String DB_BASE_URL = "jdbc:postgresql://";
 
-    public JdbcTemplate getJdbcTemplate(Connection connection) {
+    public JdbcTemplate getJdbcTemplate(final Connection connection) {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
         dataSourceBuilder.url(buildUrl(connection));
@@ -20,7 +20,7 @@ public class ConnectionDataSourceProvider {
         return new JdbcTemplate(dataSourceBuilder.build());
     }
 
-    private String buildUrl(Connection connection) {
-        return dbBaseUrl + connection.getHostname() + ":" + connection.getPort() + "/" + connection.getDatabaseName();
+    private String buildUrl(final Connection connection) {
+        return DB_BASE_URL + connection.getHostname() + ":" + connection.getPort() + "/" + connection.getDatabaseName();
     }
 }

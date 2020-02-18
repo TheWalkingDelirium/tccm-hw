@@ -17,11 +17,11 @@ public class ConnectionService {
         this.connectionRepository = connectionRepository;
     }
 
-    public Connection findConnection(Long id) {
+    public Connection findConnection(final Long id) {
         return connectionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Connection saveConnection(Connection connection) {
+    public Connection saveConnection(final Connection connection) {
         return connectionRepository.save(connection);
     }
 
@@ -29,14 +29,14 @@ public class ConnectionService {
         return connectionRepository.findAll();
     }
 
-    public Connection replaceConnection(Connection connection) {
+    public Connection replaceConnection(final Connection connection) {
         return connectionRepository
                 .findById(connection.getId())
                 .map(i -> connectionRepository.save(connection))
                 .orElseThrow(EntityNotFoundException::new);
     }
 
-    public void deleteConnection(Connection connection) {
+    public void deleteConnection(final Connection connection) {
         connectionRepository.delete(connection);
     }
 }

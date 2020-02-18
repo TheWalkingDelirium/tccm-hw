@@ -21,7 +21,7 @@ public class Connection {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -29,7 +29,7 @@ public class Connection {
         return hostname;
     }
 
-    public void setHostname(String hostname) {
+    public void setHostname(final String hostname) {
         this.hostname = hostname;
     }
 
@@ -37,7 +37,7 @@ public class Connection {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(final int port) {
         this.port = port;
     }
 
@@ -45,7 +45,7 @@ public class Connection {
         return databaseName;
     }
 
-    public void setDatabaseName(String databaseName) {
+    public void setDatabaseName(final String databaseName) {
         this.databaseName = databaseName;
     }
 
@@ -53,7 +53,7 @@ public class Connection {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -61,7 +61,7 @@ public class Connection {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -69,12 +69,12 @@ public class Connection {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Connection that = (Connection) o;

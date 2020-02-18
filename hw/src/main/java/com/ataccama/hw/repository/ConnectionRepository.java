@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ConnectionRepository extends JpaRepository<Connection, Long> {
+    @Override
     List<Connection> findAll();
 }
