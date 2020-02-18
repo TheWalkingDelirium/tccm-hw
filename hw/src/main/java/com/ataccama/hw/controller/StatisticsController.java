@@ -36,7 +36,7 @@ public class StatisticsController {
                                                           @RequestParam(required = false) final String catalog,
                                                           @RequestParam(required = false) final String schemaName,
                                                           @RequestParam(required = false) final String tableName,
-                                                          @RequestParam(required = false) final String columnName) throws Exception {
+                                                          @RequestParam(required = false) final String columnName) {
 
         final List<Column> columns = dbService.listColumns(connectionId, catalog, schemaName, tableName, columnName);
         final List<Column> filtered = columns
@@ -50,7 +50,7 @@ public class StatisticsController {
 
     @ApiOperation(value = "endpoint for table statistics. Gives details about number of records and number of attributes")
     @GetMapping(path="/tables")
-    public ResponseEntity<List<TableStat>> getTableStat(@RequestParam final Long connectionId) throws Exception {
+    public ResponseEntity<List<TableStat>> getTableStat(@RequestParam final Long connectionId) {
         final List<Table> tables = dbService.listTables(connectionId);
         final List<TableStat> stats = dbService.getStatsForTable(connectionId, tables);
         return new ResponseEntity<>(stats, HttpStatus.OK);

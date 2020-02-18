@@ -28,7 +28,7 @@ public class TableController {
 
     @ApiOperation(value = "List tables for the given connection id.")
     @GetMapping
-    public ResponseEntity<List<Table>> listTables(@RequestParam final Long connectionId) throws Exception {
+    public ResponseEntity<List<Table>> listTables(@RequestParam final Long connectionId) {
         return new ResponseEntity<>(dbService.listTables(connectionId), HttpStatus.OK);
     }
 

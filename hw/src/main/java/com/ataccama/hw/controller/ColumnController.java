@@ -31,7 +31,7 @@ public class ColumnController {
                                                     @RequestParam(required = false) final String catalog,
                                                     @RequestParam(required = false) final String schemaPattern,
                                                     @RequestParam(required = false) final String tableNamePattern,
-                                                    @RequestParam(required = false) final String columnNamePattern) throws Exception {
+                                                    @RequestParam(required = false) final String columnNamePattern) {
 
         return new ResponseEntity<>(
                 dbService.listColumns(connectionId, catalog, schemaPattern, tableNamePattern, columnNamePattern),

@@ -1,16 +1,21 @@
 package com.ataccama.hw.service;
 
 import com.ataccama.hw.datasource.ConnectionDataSourceProvider;
+import com.ataccama.hw.exception.CustomException;
 import com.ataccama.hw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.jdbc.datasource.DataSourceUtils.getConnection;
 
 @Service
 public class DbService {
@@ -23,58 +28,73 @@ public class DbService {
         this.connectionService = connectionService;
     }
 
-    public List<ColumnStat> getStatsForColumns(final Long connectionId, final List<Column> columns) throws Exception {
+    public List<ColumnStat> getStatsForColumns(final Long connectionId, final List<Column> columns) {
         final java.sql.Connection connection = getDbConnection(connectionId);
         return columns.stream().map(column -> getColumnStat(connection, column)).collect(Collectors.toList());
     }
 
-    public List<TableStat> getStatsForTable(final Long connectionId, final List<Table> tables) throws Exception {
+    public List<TableStat> getStatsForTable(final Long connectionId, final List<Table> tables) {
         final java.sql.Connection connection = getDbConnection(connectionId);
         return tables.stream().map(table -> getTableStat(connection, table)).collect(Collectors.toList());
     }
 
-    public List<String> listSchemas(final Long id) throws Exception {
-        final ResultSet result = getDbConnection(id).getMetaData().getSchemas();
-
-        final int columnCount = result.getMetaData().getColumnCount();
+    public List<String> listSchemas(final Long id) {
+        final ResultSet result;
         final List<String> metaData = new ArrayList<>();
-        while (result.next()) {
-            StringBuilder s = new StringBuilder();
-            for (int i = 1; i < columnCount; i++) {
-                s.append(result.getString(i));
+
+        try {
+            result = getDbConnection(id).getMetaData().getSchemas();
+            final int columnCount = result.getMetaData().getColumnCount();
+            while (result.next()) {
+                StringBuilder s = new StringBuilder();
+                for (int i = 1; i < columnCount; i++) {
+                    s.append(result.getString(i));
+                }
+                metaData.add(s.toString());
             }
-            metaData.add(s.toString());
+        } catch (SQLException e) {
+            throw new CustomException("Couldn't get schemas", "failed query for metadata or schemas for the given connection. Got SQL exception: " + e.getMessage());
         }
 
         return metaData;
     }
 
-    public List<Table> listTables(final Long id) throws Exception {
+    public List<Table> listTables(final Long id) {
         final List<Table> metaData = new ArrayList<>();
-        final ResultSet result = getDbConnection(id)
-                .getMetaData()
-                .getTables(null, null, null, new String[]{"TABLE"});
-        while (result.next()) {
-            metaData.add(toTable(result));
+        try {
+            final ResultSet result = getDbConnection(id)
+                    .getMetaData()
+                    .getTables(null, null, null, new String[]{"TABLE"});
+            while (result.next()) {
+                metaData.add(toTable(result));
+            }
+        } catch (SQLException e) {
+            throw new CustomException("Couldn't get metadata", "failed get metadata for the given table. Got SQL exception: " + e.getMessage());
         }
+
         return metaData;
     }
 
     public List<Map<String, Object>> getPreview(final Long connectionId,
                                                 final String schema,
-                                                final String tableName) throws Exception {
-        final ResultSet resultSet = getDbConnection(connectionId).createStatement().executeQuery(buildStatement(schema, tableName));
-
-        final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-        final int columns = resultSetMetaData.getColumnCount();
+                                                final String tableName) {
         final ArrayList<Map<String, Object>> list = new ArrayList<>(10);
 
-        while (resultSet.next()) {
-            final HashMap<String, Object> row = new HashMap<>(columns);
-            for (int i = 1; i <= columns; ++i) {
-                row.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
+        try {
+            final ResultSet resultSet = getDbConnection(connectionId).createStatement().executeQuery(buildStatement(schema, tableName));
+
+            final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            final int columns = resultSetMetaData.getColumnCount();
+
+            while (resultSet.next()) {
+                final HashMap<String, Object> row = new HashMap<>(columns);
+                for (int i = 1; i <= columns; ++i) {
+                    row.put(resultSetMetaData.getColumnName(i), resultSet.getObject(i));
+                }
+                list.add(row);
             }
-            list.add(row);
+        } catch (SQLException e) {
+            throw new CustomException("Couldn't get preview", "failed query for preview for the given table. Got SQL exception: " + e.getMessage());
         }
 
         return list;
@@ -84,31 +104,36 @@ public class DbService {
                                     final String catalog,
                                     final String schemaPattern,
                                     final String tableNamePattern,
-                                    final String columnNamePattern) throws Exception {
-
-        final ResultSet result = getDbConnection(connectionId)
-                .getMetaData()
-                .getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
-
+                                    final String columnNamePattern) {
         final List<Column> metaData = new ArrayList<>();
-        while (result.next()) {
-            metaData.add(toColumn(result));
+
+        try {
+            final ResultSet result;
+            result = getDbConnection(connectionId)
+                    .getMetaData()
+                    .getColumns(catalog, schemaPattern, tableNamePattern, columnNamePattern);
+
+            while (result.next()) {
+                metaData.add(toColumn(result));
+            }
+        } catch (SQLException e) {
+            throw new CustomException("Couldn't fetch metadata", "failed get metadata from jdbc connection, got SQLException: " + e.getMessage());
         }
 
         return metaData;
     }
 
-    private java.sql.Connection getDbConnection(final Long connectionId) throws Exception {
+    private java.sql.Connection getDbConnection(final Long connectionId) {
         final Connection connection = connectionService.findConnection(connectionId);
-        return Optional.ofNullable(
-                dataSourceProvider.getJdbcTemplate(connection).getDataSource())
-                .map(dataSource -> {
-                    try {
-                        return dataSource.getConnection();
-                    } catch (SQLException e) {
-                        return null;
-                    }
-                }).orElseThrow(() -> new Exception("failed to get connection"));
+        Optional<DataSource> dataSource = Optional.ofNullable(
+                dataSourceProvider.getJdbcTemplate(connection).getDataSource()
+        );
+
+        java.sql.Connection result = null;
+        result = dataSource.map(DataSourceUtils::getConnection).orElseThrow(
+                () -> new CustomException("couldn't get connection", "connectionId was found, but connection couldn't be established")
+        );
+        return result;
     }
 
     // result is parsed according to the documentation https://docs.oracle.com/en/java/javase/13/docs/api/java.sql/java/sql/DatabaseMetaData.html#getColumns
@@ -226,7 +251,7 @@ public class DbService {
                 median = medianRs.getString(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new CustomException("SQL exception", "tried to execute SELECT queries for column stat. Got SQLException: " + e.getMessage() );
         }
 
         return new ColumnStat(column.getTableName(), column.getColumnName(), min, max, avg, median);
@@ -248,7 +273,7 @@ public class DbService {
                 numberOfRecords = numberOfRecordsRS.getInt(1);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new CustomException("SQL exception", "tried to execute SELECT queries for column stat. Got SQLException: " + e.getMessage());
         }
 
         return new TableStat(numberOfRecords, numberOfAttributes);

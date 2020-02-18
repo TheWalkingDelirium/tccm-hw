@@ -26,7 +26,7 @@ public class SchemasController {
 
     @ApiOperation(value = "lists schemas for the given connection")
     @GetMapping
-    public ResponseEntity<List<String>> listSchemas(@RequestParam final Long connectionId) throws Exception {
+    public ResponseEntity<List<String>> listSchemas(@RequestParam final Long connectionId) {
         return new ResponseEntity<>(dbService.listSchemas(connectionId), HttpStatus.OK);
     }
 }

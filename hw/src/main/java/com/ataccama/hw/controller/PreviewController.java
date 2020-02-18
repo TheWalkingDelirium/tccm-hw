@@ -29,7 +29,7 @@ public class PreviewController {
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getDataPreview(@RequestParam final Long connectionId,
                                                                     @RequestParam(required = false) final String schema,
-                                                                    @RequestParam final String tableName) throws Exception {
+                                                                    @RequestParam final String tableName) {
 
         return new ResponseEntity<>(
                 dbService.getPreview(connectionId, schema, tableName),
